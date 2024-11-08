@@ -102,7 +102,7 @@ static void tcp_server_task(void *pvParameters)
         // Mavlink TCP data reception
         ssize_t bytes_received = recv(sock, rx_buffer, sizeof(rx_buffer), 0);
         printf("ESP32 RECEIVED: %d\n", bytes_received);
-        printf("\nMavlink message from PC to ESP32:\n");                     // Start Modbus Application Protocol (MBAP)
+        printf("\nMavlink message from PC to ESP32:\n");
         printf("\nHeader:\n");
         printf("Start-of-frame:                     %02x\n", rx_buffer[0]);  // Always 0xFE
         printf("Payload length:                     %02x\n", rx_buffer[1]);  // HEARTBEAT has a payload length of 9 bytes
