@@ -126,7 +126,7 @@ static void tcp_server_task(void *pvParameters)
 
         vTaskDelay(1000 / portTICK_PERIOD_MS);
 
-        // Server response message for Modbus TCP - tx_buffer build
+        // Server response message for Mavlink TCP - tx_buffer build
         tx_buffer[0] = rx_buffer[0];
         tx_buffer[1] = rx_buffer[1];
         tx_buffer[2] = rx_buffer[2];
