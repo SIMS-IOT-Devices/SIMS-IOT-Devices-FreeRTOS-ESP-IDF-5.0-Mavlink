@@ -33,15 +33,11 @@ static void tcp_server_task(void *pvParameters)
     // Variables definitions
     char addr_str[128];
     char rx_buffer[128];
-    // int tx_buffer_length = 17; // For Heartbeat message
-    // char tx_buffer[tx_buffer_length];
     int keepAlive = 1;
     int keepIdle = 5;
     int keepInterval = 5;
     int keepCount = 3;
     struct sockaddr_storage dest_addr;
-
-    // int counter = 0;
 
     // server address definition
     struct sockaddr_in *dest_addr_ip4 = (struct sockaddr_in *)&dest_addr;
@@ -119,8 +115,8 @@ static void tcp_server_task(void *pvParameters)
         printf("8 - mavlink_version:                    %02x\n", rx_buffer[18]); // 3 = Required for MAVLink 2
 
         printf("\nCRC 2 bytes:\n");
-        printf("1 - CRC:                                %02x\n", rx_buffer[19]); // LSB = 0x98
-        printf("2 - CRC:                                %02x\n", rx_buffer[20]); // MSB = 0x2F
+        printf("1 - CRC:                                %02x\n", rx_buffer[19]); // LSB
+        printf("2 - CRC:                                %02x\n", rx_buffer[20]); // MSB
 
         vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
