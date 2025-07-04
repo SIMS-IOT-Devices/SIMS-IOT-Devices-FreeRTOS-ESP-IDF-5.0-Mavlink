@@ -1,4 +1,6 @@
-Interaction with ESP32 in ESP IDF 5.0 environment via MAVLink 1.0 protocol: <br>
+Interaction with ESP32 in ESP IDF 5.0 environment. <br><br>
+
+Send Heartbeat message in MAVLink 1.0 protocol: <br>
 mavlink_heartbeat.py - Python file run on PC <br>
 Mavlink_on_ESP32.c - C file run on ESP32 <br><br>
 
