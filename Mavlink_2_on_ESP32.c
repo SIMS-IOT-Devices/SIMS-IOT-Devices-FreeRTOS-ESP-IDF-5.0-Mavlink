@@ -112,7 +112,7 @@ static void tcp_server_task(void *pvParameters)
         printf("1 - custom_mode:                        %02x\n", rx_buffer[11]); 
         printf("2 - custom_mode:                        %02x\n", rx_buffer[12]); 
         printf("3 - custom_mode:                        %02x\n", rx_buffer[13]);  
-        printf("4 - type:                               %02x\n", rx_buffer[14]); // 6 = MAV_TYPE_FIXED_WING
+        printf("4 - type:                               %02x\n", rx_buffer[14]); // 6 = MAV_TYPE_GCS
         printf("5 - autopilot:                          %02x\n", rx_buffer[15]); // 0 = MAV_AUTOPILOT_GENERIC
         printf("6 - base_mode:                          %02x\n", rx_buffer[16]); // 0 = No mode flags active
         printf("7 - system_status:                      %02x\n", rx_buffer[17]); // 4 = MAV_STATE_ACTIVE
