@@ -1,6 +1,5 @@
 # Sending heartbeats in MAVLink 2.0 format 
-# Start-of-frame: fe V1
-# Start-of-frame: fd V2
+# Start-of-frame: fe V1 and fd V2
 
 import os
 from pymavlink import mavutil
