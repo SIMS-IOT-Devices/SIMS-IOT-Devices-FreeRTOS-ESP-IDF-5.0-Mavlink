@@ -9,8 +9,7 @@ Interaction with ESP32 in ESP IDF 5.0 environment. <br><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2 - MAVLink_2_ESP32.c - The C file runs on ESP32 and receives the MAVLink 2.0 Heartbeat message on a specific IP<br><br>
 
 3 - Send 5 Heartbeat messages in MAVLink 2.0: <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3 - MAVLink_2_Heartbeat_5_messages.py - Sends 5 consecutive MAVLink 2.0 from the PC<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Heartbeat messages.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3 - MAVLink_2_Heartbeat_5_messages.py - Sends 5 consecutive MAVLink 2.0 Heartbeat messages from the PC<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3 - MAVLink_2_ESP32_5_messages.c - The C file runs on ESP32 and receives 5 MAVLink 2.0 Heartbeat messages.<br><br>
 
 4 - Send Heartbeat message in MAVLink 2.0 from ESP32 to ESP32: <br>
