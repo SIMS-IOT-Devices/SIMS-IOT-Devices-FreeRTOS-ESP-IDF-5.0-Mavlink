@@ -100,7 +100,6 @@ void raw_tcp_client_task(void *pvParameters)
         ESP_LOGI(TAG, "Successfully connected to %s:%d", TARGET_IP, TARGET_PORT);
 
         // 3. Update MAVLink message
-
         // Update counter
         if (i > 0)
             HEX_DATA_TO_SEND[4]++;
@@ -112,7 +111,7 @@ void raw_tcp_client_task(void *pvParameters)
         uint8_t payload_len = HEX_DATA_TO_SEND[1]; // from header
         uint8_t crc_extra = 50;                    // example for HEARTBEAT
 
-        // 1. Accumulate header + payload (excluding start byte 0xFD)
+        // A. Accumulate header + payload (excluding start byte 0xFD)
         for (uint32_t ii = 1; ii < HEX_DATA_LEN - 2; ii++)
         {
             data = HEX_DATA_TO_SEND[ii];
@@ -121,7 +120,7 @@ void raw_tcp_client_task(void *pvParameters)
             crc = (crc >> 8) ^ ((uint16_t)data << 8) ^ ((uint16_t)data << 3) ^ ((uint16_t)data >> 4);
         }
 
-        // 2. Accumulate CRC_EXTRA
+        // B. Accumulate CRC_EXTRA
         data = crc_extra;
         data ^= (uint8_t)(crc & 0xFF);
         data ^= (data << 4);
@@ -129,19 +128,7 @@ void raw_tcp_client_task(void *pvParameters)
 
         HEX_DATA_TO_SEND[HEX_DATA_LEN - 2] = crc & 0xFF;
         HEX_DATA_TO_SEND[HEX_DATA_LEN - 1] = (crc >> 8) & 0xFF;
-
-        // for (int ii = 0; ii < HEX_DATA_LEN; ii++)
-        // {
-        //     printf("%02X ", HEX_DATA_TO_SEND[ii]);
-        // }
-        // printf("\n");
-
-        // for (int ii = 0; ii < HEX_DATA_LEN; ii++)
-        // {
-        //     printf("%02X ", HEX_DATA_TO_SEND[ii]);
-        // }
-        // printf("\n");
-
+      
         // 4. Send MAVLink message
         int bytes_sent = send(sock, HEX_DATA_TO_SEND, HEX_DATA_LEN, 0);
         if (bytes_sent < 0)
