@@ -18,6 +18,6 @@ Interaction with ESP32 in ESP IDF 5.0 environment. <br><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4 - MAVLink_2_ESP32_Client.c - ESP32 file sends the MAVLink 2.0 Heartbeat message to a specific IP<br><br>
 
 5 - Send 5 Heartbeat messages in MAVLink 2.0 from ESP32 to ESP32: <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4 - MAVLink_2_Heartbeat.py - The Python file for a PC to send 5 MAVLink 2.0 Heartbeat messages to a specific IP<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4 - MAVLink_2_ESP32_Server.c - ESP32 file receives 5 MAVLink 2.0 Heartbeat messages on a specific IP<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4 - MAVLink_2_ESP32_Client.c - ESP32 file sends 5 MAVLink 2.0 Heartbeat messages to a specific IP<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5 - MAVLink_2_Heartbeat.py - The Python file for a PC to send 5 MAVLink 2.0 Heartbeat messages to a specific IP<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5 - MAVLink_2_ESP32_Server.c - ESP32 file receives 5 MAVLink 2.0 Heartbeat messages on a specific IP<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5 - MAVLink_2_ESP32_Client.c - ESP32 file sends 5 MAVLink 2.0 Heartbeat messages to a specific IP<br><br>
