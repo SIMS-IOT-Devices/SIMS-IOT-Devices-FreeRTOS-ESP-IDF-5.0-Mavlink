@@ -105,7 +105,6 @@ static void tcp_server_task(void *pvParameters)
             else
             {
                 printf("\nMavlink 2.0 message, bytes received in ESP32: %d\n", bytes_received);
-                printf("\n");
                 printf("\nHeader 10 bytes:\n");
                 printf("0 - Start-of-frame:                     %02x\n", rx_buffer[0]); // MAVLink 1.0 0xFE, MAVLink 2.0 0xFD
                 printf("1 - Payload length:                     %02x\n", rx_buffer[1]); // HEARTBEAT has a payload length of 9 bytes
