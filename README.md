@@ -22,6 +22,6 @@ Interaction with ESP32 in ESP IDF 5.0 environment. <br><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5 - MAVLink_2_ESP32_Server.c - ESP32 file receives 5 MAVLink 2.0 Heartbeat messages on a specific IP<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5 - MAVLink_2_ESP32_Client.c - ESP32 file sends 5 MAVLink 2.0 Heartbeat messages to a specific IP<br><br>
 
-6 - Send 5 Heartbeat messages in MAVLink 2.0 from ESP32 to ESP32: <br>
+6 - Connect a PC running Python to a PC running Mission Planner: <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6 - Mission_Planner_Connection.py - Establish a connection from the PC running this Python code to <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;another Windows PC running Mission Planner with a known IP and Port.<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;another Windows PC running Mission Planner with a known IP and Port.<br><br>
