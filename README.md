@@ -24,4 +24,4 @@ Interaction with ESP32 in ESP IDF 5.0 environment. <br><br>
 
 6 - Connect a PC running Python to a PC running Mission Planner: <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6 - Mission_Planner_Connection.py - Establish a connection from the PC running this Python code to <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;another Windows PC running Mission Planner with a known IP and Port.<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;another Windows PC running Mission Planner with a known IP and Port.<br><br>
