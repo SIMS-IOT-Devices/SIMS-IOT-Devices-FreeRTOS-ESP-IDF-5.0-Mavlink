@@ -1,4 +1,4 @@
-// TCP Client to send a MAVLink 2.0 Heartbeat message to another ESP32 with an open socket and known IP
+// UDP Client to send a MAVLink 2.0 Heartbeat and parameters message from ESP32 to Mission Planner PC with known IP and PORT
 
 #include <stdio.h>
 #include "freertos/FreeRTOS.h"
@@ -32,6 +32,11 @@ uint8_t HEX_DATA_TO_SEND[] = {0xFD, 0x09, 0x00, 0x00, 0x00, 0x01, 0x01, 0x00, 0x
                               0x00, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x04, 0x03,
                               0x98, 0x2F};
 size_t HEX_DATA_LEN = sizeof(HEX_DATA_TO_SEND);
+// MAVLink 2.0 Parameters definition
+uint8_t parm_msg[] = {0xFD, 0x19, 0x00, 0x00, 0x00, 0x01, 0x01, 0x16, 0x00, 0x00,
+                              0x00, 0x00, 0x8, 0x03, 0x3f, 0x00, 0x00, 0x00, 0x00, 0x50, 0x41, 0x52,
+                              0x41, 0x4D, 0x5F, 0x31, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x09, 0x78, 0xB1};
+size_t parm_msg_len = sizeof(parm_msg);
 
 static void wifi_event_handler(void *event_handler_arg, esp_event_base_t event_base, int32_t event_id, void *event_data)
 {
@@ -117,8 +122,6 @@ void udp_client_task(void *pvParameters)
         // Calculate CRC
         uint16_t crc = 0xFFFF;
         uint8_t data;
-
-        uint8_t payload_len = HEX_DATA_TO_SEND[1]; // from header
         uint8_t crc_extra = 50;                    // example for HEARTBEAT
 
         // A. Accumulate header + payload (excluding start byte 0xFD)
@@ -139,15 +142,27 @@ void udp_client_task(void *pvParameters)
         HEX_DATA_TO_SEND[HEX_DATA_LEN - 2] = crc & 0xFF;
         HEX_DATA_TO_SEND[HEX_DATA_LEN - 1] = (crc >> 8) & 0xFF;
 
-        // 4. Send MAVLink message
+        // 4.1 Send MAVLink message
         int bytes_sent = send(sock, HEX_DATA_TO_SEND, HEX_DATA_LEN, 0);
         if (bytes_sent < 0)
         {
-            ESP_LOGE(TAG, "Error sending data: %d (%s)", errno, strerror(errno));
+            ESP_LOGE(TAG, "Error sending HEARTBEAT data: %d (%s)", errno, strerror(errno));
         }
         else
         {
-            ESP_LOGI(TAG, "Sent %d bytes of data.", bytes_sent);
+            ESP_LOGI(TAG, "Sent %d bytes of HEARTBEAT data.", bytes_sent);
+        }
+        vTaskDelay(50 / portTICK_PERIOD_MS);
+        
+        // 4.2 Send PARAM message
+        bytes_sent = send(sock, parm_msg, parm_msg_len, 0);
+        if (bytes_sent < 0)
+        {
+            ESP_LOGE(TAG, "Error sending PARAM data: %d (%s)", errno, strerror(errno));
+        }
+        else
+        {
+            ESP_LOGI(TAG, "Sent %d bytes of PARAM data.", bytes_sent);
         }
         vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
