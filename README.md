@@ -29,5 +29,7 @@ Interaction with ESP32 in ESP IDF 5.0 environment. <br><br>
 7 - Connect a ESP32 running ESP IDF 5.3 to a PC running Mission Planner: <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7 - Python_Mission_Planner_Connection.py - Reference code to establish a connection from the PC running<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this Python code to another Windows PC running Mission Planner with a known IP and Port.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7 - Python_UDP_Sniffer.py - Python UDP sniffer used instead of Mission Planner<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to read the messages sent by ESP32<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7 - ESP_IDF_Mission_Planner_Connection.py - Establish a connection from the ESP32 running this code to <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;another Windows PC running Mission Planner with a known IP and Port.<br><br>
