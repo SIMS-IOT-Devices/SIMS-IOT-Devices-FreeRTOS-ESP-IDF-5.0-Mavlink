@@ -1,4 +1,4 @@
-// UDP Client to send a MAVLink 2.0 Heartbeat and parameters message 
+// UDP Client to send a MAVLink 2.0 Heartbeat and parameters message
 // from ESP32 to Mission Planner PC with known IP and PORT
 
 #include <stdio.h>
@@ -25,18 +25,72 @@
 static const char *TAG = "UDP CLIENT";
 
 // Target UDP Server
-#define TARGET_IP "192.168.1.34"
+#define TARGET_IP "192.168.1.37"
 #define TARGET_PORT 14550
 
 // MAVLink 2.0 Heartbeat message
-uint8_t HEX_DATA_TO_SEND[] = {0xFD, 0x09, 0x00, 0x00, 0x00, 0x01, 0x01, 0x00, 0x00, 0x00,
-                              0x00, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x04, 0x03,
-                              0x98, 0x2F};
+uint8_t HEX_DATA_TO_SEND[] = {  0xFD, // MAVLink 2.0 identifier
+                                0x09, // Length of payload = 9 bytes
+                                0x00, // Incompatibility flags
+                                0x00, // Compatibility flags
+                                0x00, // Sequence number
+                                0x01, // System ID
+                                0x01, // Component ID
+                                0x00, // HEARTBEAT
+                                0x00, // HEARTBEAT
+                                0x00, // HEARTBEAT
+                                0x00, // Custom Mode = 0
+                                0x00, // Custom Mode = 0
+                                0x00, // Custom Mode = 0
+                                0x00, // Custom Mode = 0
+                                0x02, // MAV_TYPE_QUADROTOR
+                                0x00, // MAV_AUTOPILOT_GENERIC
+                                0x00, // Not armed
+                                0x04, // User-defined
+                                0x03, // MAVLink version = 3 (for MAVLink 2.0)
+                                0x98, // CRC-16
+                                0x2F  // CRC-16
+                                };
 size_t HEX_DATA_LEN = sizeof(HEX_DATA_TO_SEND);
 // MAVLink 2.0 Parameters definition
-uint8_t parm_msg[] = {0xFD, 0x19, 0x00, 0x00, 0x00, 0x01, 0x01, 0x16, 0x00, 0x00,
-                              0x00, 0x00, 0x8, 0x03, 0x3f, 0x00, 0x00, 0x00, 0x00, 0x50, 0x41, 0x52,
-                              0x41, 0x4D, 0x5F, 0x31, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x09, 0x78, 0xB1};
+uint8_t parm_msg[] = {  0xFD, // MAVLink 2.0
+                        0x19, // Length of payload = 25 bytes
+                        0x00, // Incompatibility flags
+                        0x00, // Compatibility flags
+                        0x00, // Sequence
+                        0x01, // System ID
+                        0x01, // Component ID
+                        0x16, // PARAM_VALUE = 22
+                        0x00, // PARAM_VALUE = 22
+                        0x00, // PARAM_VALUE = 22
+                        0x00, // param_value = 1.0
+                        0x00, // param_value = 1.0
+                        0x80, // param_value = 1.0
+                        0x3f, // param_value = 1.0
+                        0x00, // param_count = 0
+                        0x00, // param_count = 0
+                        0x00, // param_index = 0
+                        0x00, // param_index = 0
+                        0x50, // param_id = "PARAM_1"	
+                        0x41, // param_id = "PARAM_1"
+                        0x52, // param_id = "PARAM_1"
+                        0x41, // param_id = "PARAM_1"
+                        0x4D, // param_id = "PARAM_1"
+                        0x5F, // param_id = "PARAM_1"
+                        0x31, // param_id = "PARAM_1"
+                        0x00, // param_id = "PARAM_1"
+                        0x00, // padding for 16 chars
+                        0x00, // padding for 16 chars
+                        0x00, // padding for 16 chars
+                        0x00, // padding for 16 chars
+                        0x00, // padding for 16 chars
+                        0x00, // padding for 16 chars
+                        0x00, // padding for 16 chars
+                        0x00, // padding for 16 chars
+                        0x09, // MAV_PARAM_TYPE_REAL32
+                        0x78, // CRC-16
+                        0xB1  // CRC-16  
+                        };
 size_t parm_msg_len = sizeof(parm_msg);
 
 static void wifi_event_handler(void *event_handler_arg, esp_event_base_t event_base, int32_t event_id, void *event_data)
@@ -84,6 +138,8 @@ void wifi_connection()
 
 void udp_client_task(void *pvParameters)
 {
+    int bytes_sent = 0;
+
     struct sockaddr_in dest_addr;                     // Structure to hold the server's address
     memset(&dest_addr, 0, sizeof(dest_addr));         // Clear the structure
     dest_addr.sin_addr.s_addr = inet_addr(TARGET_IP); // Set target IP
@@ -93,6 +149,11 @@ void udp_client_task(void *pvParameters)
     int sock = -1; // Socket descriptor
     int err = 0;   // Error code holder
 
+    // Receive information
+    uint8_t rx_buffer[1500];
+    struct sockaddr_in source_addr;
+    socklen_t socklen = sizeof(source_addr);
+
     // 1. Create a socket
     // sock = socket(AF_INET, SOCK_STREAM, IPPROTO_IP);
     sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP);
@@ -101,6 +162,10 @@ void udp_client_task(void *pvParameters)
         ESP_LOGE(TAG, "Failed to create socket: %d", errno);
         vTaskDelay(pdMS_TO_TICKS(5000)); // Wait before retrying
     }
+
+    // 1.1 Increase send buffer size
+    int send_buf_size = 8192;
+    setsockopt(sock, SOL_SOCKET, SO_SNDBUF, &send_buf_size, sizeof(send_buf_size));
 
     // 2. Connect to the server
     ESP_LOGI(TAG, "Attempting to connect to %s:%d...", TARGET_IP, TARGET_PORT);
@@ -123,7 +188,7 @@ void udp_client_task(void *pvParameters)
         // Calculate CRC
         uint16_t crc = 0xFFFF;
         uint8_t data;
-        uint8_t crc_extra = 50;                    // example for HEARTBEAT
+        uint8_t crc_extra = 50; // example for HEARTBEAT
 
         // A. Accumulate header + payload (excluding start byte 0xFD)
         for (uint32_t ii = 1; ii < HEX_DATA_LEN - 2; ii++)
@@ -143,8 +208,8 @@ void udp_client_task(void *pvParameters)
         HEX_DATA_TO_SEND[HEX_DATA_LEN - 2] = crc & 0xFF;
         HEX_DATA_TO_SEND[HEX_DATA_LEN - 1] = (crc >> 8) & 0xFF;
 
-        // 4.1 Send MAVLink message
-        int bytes_sent = send(sock, HEX_DATA_TO_SEND, HEX_DATA_LEN, 0);
+        // 4.1 Send Heartbeat message
+        bytes_sent = send(sock, HEX_DATA_TO_SEND, HEX_DATA_LEN, 0);
         if (bytes_sent < 0)
         {
             ESP_LOGE(TAG, "Error sending HEARTBEAT data: %d (%s)", errno, strerror(errno));
@@ -153,8 +218,7 @@ void udp_client_task(void *pvParameters)
         {
             ESP_LOGI(TAG, "Sent %d bytes of HEARTBEAT data.", bytes_sent);
         }
-        vTaskDelay(50 / portTICK_PERIOD_MS);
-        
+
         // 4.2 Send PARAM message
         bytes_sent = send(sock, parm_msg, parm_msg_len, 0);
         if (bytes_sent < 0)
@@ -164,6 +228,22 @@ void udp_client_task(void *pvParameters)
         else
         {
             ESP_LOGI(TAG, "Sent %d bytes of PARAM data.", bytes_sent);
+        }
+
+        // Receive information
+        int len = recvfrom(sock, rx_buffer, sizeof(rx_buffer) - 1, 0, (struct sockaddr *)&source_addr, &socklen);
+        if (len < 0) {
+            ESP_LOGE(TAG, "recvfrom failed: %d (%s)", errno, strerror(errno));
+            break;
+        } else {
+            ESP_LOGI(TAG, "Received %d bytes from %s:%d", len,
+                     inet_ntoa(source_addr.sin_addr), ntohs(source_addr.sin_port));
+            // Print raw MAVLink message
+            printf("Received from Mission Planner:\n");
+            for (int i = 0; i < len; i++) {
+                printf("%02X ", rx_buffer[i]);
+            }
+            printf("\n");
         }
         vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
